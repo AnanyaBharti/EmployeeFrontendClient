@@ -1,6 +1,4 @@
 ﻿using EmployeeFrontendClient.Model;
-using EmployeeFrontendClient.Models;
-using EmployeeFrontendClient.Models.ViewModels;
 using System.Text;
 using System.Text.Json;
 

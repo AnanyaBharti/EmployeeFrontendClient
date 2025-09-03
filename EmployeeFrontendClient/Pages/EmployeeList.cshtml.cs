@@ -2,7 +2,7 @@ using EmployeeFrontendClient.Model;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace EmployeeFrontEndClient.Pages
+namespace EmployeeFrontendClient.Pages
 {
     public class EmployeeListModel : PageModel
     {
@@ -15,8 +15,14 @@ namespace EmployeeFrontEndClient.Pages
 
         public List<EmployeeModel> EmployeeModels { get; set; } = new List<EmployeeModel>();
 
-        public async Task OnGetAsync()
+        public async Task<IActionResult> OnGetAsync()
         {
+            // Check if user is authenticated
+            if (!LoginModel.IsUserLoggedIn(HttpContext))
+            {
+                return RedirectToPage("/Login");
+            }
+
             try
             {
                 EmployeeModels = await _service.GetEmployees() ?? new List<EmployeeModel>();
@@ -27,6 +33,8 @@ namespace EmployeeFrontEndClient.Pages
                 // You might want to add error handling/logging here
                 Console.WriteLine($"Error loading employees: {ex.Message}");
             }
+
+            return Page();
         }
 
         // Add this delete handler

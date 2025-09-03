@@ -1,5 +1,4 @@
 using EmployeeFrontendClient.Model;
-using EmployeeFrontendClient.Models;
 using EmployeeFrontendClient.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;

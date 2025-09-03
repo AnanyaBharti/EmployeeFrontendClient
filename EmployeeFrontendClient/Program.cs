@@ -2,8 +2,6 @@
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.
-
 // Add services to the container
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddRazorPages();
@@ -32,6 +30,13 @@ builder.Services.AddHttpClient<AuthService>(client =>
 builder.Services.AddHttpClient<EmployeeService>(client =>
 {
     client.BaseAddress = new Uri("https://localhost:7090/"); // Employee API base URL
+}).ConfigurePrimaryHttpMessageHandler(() =>
+{
+    return new HttpClientHandler
+    {
+        ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator,
+        UseCookies = true
+    };
 });
 
 // Register Services

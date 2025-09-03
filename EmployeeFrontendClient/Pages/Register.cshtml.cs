@@ -1,5 +1,4 @@
-using EmployeeFrontendClient.Models;
-using EmployeeFrontendClient.Models.ViewModels;
+using EmployeeFrontendClient.Model;
 using EmployeeFrontendClient.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -45,7 +44,7 @@ namespace EmployeeFrontendClient.Pages
                     // Store user data in session ONLY
                     HttpContext.Session.SetString("IsAuthenticated", "true");
                     HttpContext.Session.SetString("UserId", authResult.UserId.ToString());
-                  //  HttpContext.Session.SetString("Username", authResult.Username ?? Input.Username);
+                    HttpContext.Session.SetString("Username", authResult.Username ?? Input.Username);
                     HttpContext.Session.SetString("Email", Input.Email);
 
                     // Store token if API returns one

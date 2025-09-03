@@ -5,10 +5,9 @@ public class EmployeeService
 {
     private readonly HttpClient _httpClient;
 
-    public EmployeeService()
+    public EmployeeService(HttpClient httpClient)
     {
-        _httpClient = new HttpClient();
-        _httpClient.BaseAddress = new Uri("https://localhost:7090/"); // Set base address
+        _httpClient = httpClient;
     }
 
     public async Task<List<EmployeeModel>> GetEmployees()

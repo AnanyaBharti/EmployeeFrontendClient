@@ -16,10 +16,17 @@ namespace EmployeeFrontendClient.Pages
         [BindProperty]
         public EmployeeModel Employee { get; set; } = new EmployeeModel(0, "", "", "", "");
 
-        public void OnGet()
+        public IActionResult OnGet()
         {
+            // Check if user is authenticated
+            if (!LoginModel.IsUserLoggedIn(HttpContext))
+            {
+                return RedirectToPage("/Login");
+            }
+
             // Initialize with empty values
             Employee = new EmployeeModel(0, "", "", "", "");
+            return Page();
         }
 
         public async Task<IActionResult> OnPostAsync()
@@ -34,7 +41,7 @@ namespace EmployeeFrontendClient.Pages
                 // Create a new record with the form data
                 var employeeToAdd = new EmployeeModel(
                     0, // ID will be set by the API
-                    Employee.name,
+                    Employee.Name,
                     Employee.Email,
                     Employee.Address,
                     Employee.Role

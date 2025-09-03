@@ -18,6 +18,12 @@ namespace EmployeeFrontendClient.Pages
 
         public async Task<IActionResult> OnGetAsync(int id)
         {
+            // Check if user is authenticated
+            if (!LoginModel.IsUserLoggedIn(HttpContext))
+            {
+                return RedirectToPage("/Login");
+            }
+
             try
             {
                 var employee = await _service.GetEmployeeById(id);
@@ -46,14 +52,14 @@ namespace EmployeeFrontendClient.Pages
             {
                 // Create a new record with updated values (since records are immutable)
                 var updatedEmployee = new EmployeeModel(
-                    Employee.id,
-                    Employee.name,
+                    Employee.Id,
+                    Employee.Name,
                     Employee.Email,
                     Employee.Address,
                     Employee.Role
                 );
 
-                var result = await _service.UpdateEmployee(Employee.id, updatedEmployee);
+                var result = await _service.UpdateEmployee(Employee.Id, updatedEmployee);
                 if (result)
                 {
                     TempData["SuccessMessage"] = "Employee updated successfully!";

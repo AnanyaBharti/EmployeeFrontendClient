@@ -1,5 +1,5 @@
 ﻿@page
-@model EmployeeFrontEndClient.Pages.EmployeeListModel
+@model EmployeeFrontendClient.Pages.EmployeeListModel
 @{
     ViewData["Title"] = "Employees List";
 }
@@ -43,13 +43,13 @@
         @foreach (var employee in Model.EmployeeModels)
         {
             <tr>
-                <td>@employee.name</td>
+                <td>@employee.Name</td>
                 <td>@employee.Role</td>
                 <td>@employee.Email</td>
                 <td>@employee.Address</td>
                 <td>
-                    <a asp-page="Edit" asp-route-id="@employee.id" class="btn btn-warning btn-sm">Edit</a>
-                    <form method="post" asp-page-handler="Delete" asp-route-id="@employee.id" style="display: inline;"
+                    <a asp-page="Edit" asp-route-id="@employee.Id" class="btn btn-warning btn-sm">Edit</a>
+                    <form method="post" asp-page-handler="Delete" asp-route-id="@employee.Id" style="display: inline;"
                           onsubmit="return confirm('Are you sure you want to delete this employee?')">
                         <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                     </form>
