@@ -1,16 +1,42 @@
+﻿using EmployeeFrontendClient.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.
+
 // Add services to the container
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddRazorPages();
 
-// Register HttpClient with base address
-builder.Services.AddHttpClient<EmployeeService>(client =>
+// Add Session support (minimal configuration)
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(options =>
 {
-    client.BaseAddress = new Uri("https://localhost:7090/");
+    options.IdleTimeout = TimeSpan.FromMinutes(30); // Session timeout
 });
 
-// Or register EmployeeService as scoped
+// Register AuthService with your API
+builder.Services.AddHttpClient<AuthService>(client =>
+{
+    client.BaseAddress = new Uri("https://localhost:7090/api/"); // Your API base URL
+}).ConfigurePrimaryHttpMessageHandler(() =>
+{
+    return new HttpClientHandler
+    {
+        ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator,
+        UseCookies = true
+    };
+});
+
+// Register EmployeeService 
+builder.Services.AddHttpClient<EmployeeService>(client =>
+{
+    client.BaseAddress = new Uri("https://localhost:7090/"); // Employee API base URL
+});
+
+// Register Services
 builder.Services.AddScoped<EmployeeService>();
+builder.Services.AddScoped<AuthService>();
 
 var app = builder.Build();
 
@@ -24,7 +50,11 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
-app.UseAuthorization();
+
+// Enable Session middleware
+app.UseSession();
+
+// Map Razor Pages
 app.MapRazorPages();
 
 app.Run();

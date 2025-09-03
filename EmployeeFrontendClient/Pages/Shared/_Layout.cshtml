@@ -22,15 +22,98 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/EmployeeList">Employee</a>
-                        </li>
+                        @if (!string.IsNullOrEmpty(Context.Session.GetString("UserId")))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/EmployeeList">Employee</a>
+                            </li>
+                        }
+                    </ul>
+
+                    <!-- Authentication Navigation -->
+                    <ul class="navbar-nav">
+                        @if (!string.IsNullOrEmpty(Context.Session.GetString("UserId")))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle text-dark" href="#" id="navbarDropdown" role="button"
+                                   data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fas fa-user"></i>
+                                    Welcome, @(Context.Session.GetString("Username") ?? User.Identity.Name)
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <li>
+                                        <span class="dropdown-item-text">
+                                            <small class="text-muted">@Context.Session.GetString("Email")</small>
+                                        </span>
+                                    </li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="#"><i class="fas fa-user-edit"></i> Profile</a></li>
+                                    <li><a class="dropdown-item" href="#"><i class="fas fa-cog"></i> Settings</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <form class="d-inline" asp-page="/Logout" method="post">
+                                            <button type="submit" class="dropdown-item">
+                                                <i class="fas fa-sign-out-alt"></i> Logout
+                                            </button>
+                                        </form>
+                                    </li>
+                                </ul>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-page="/Register">
+                                    <i class="fas fa-user-plus"></i> Register
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-page="/Login">
+                                    <i class="fas fa-sign-in-alt"></i> Login
+                                </a>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>
         </nav>
     </header>
+
     <div class="container">
+        <!-- Success/Error Message Display -->
+        @{
+            var loginSuccess = Context.Session.GetString("LoginSuccess");
+            var registrationSuccess = Context.Session.GetString("RegistrationSuccess");
+            var logoutMessage = Context.Session.GetString("LogoutMessage");
+        }
+
+        @if (!string.IsNullOrEmpty(loginSuccess))
+        {
+            <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+                <i class="fas fa-check-circle"></i> @loginSuccess
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            Context.Session.Remove("LoginSuccess"); // Clear after displaying
+        }
+
+        @if (!string.IsNullOrEmpty(registrationSuccess))
+        {
+            <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+                <i class="fas fa-user-check"></i> @registrationSuccess
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            Context.Session.Remove("RegistrationSuccess"); // Clear after displaying
+        }
+
+        @if (!string.IsNullOrEmpty(logoutMessage))
+        {
+            <div class="alert alert-info alert-dismissible fade show mt-3" role="alert">
+                <i class="fas fa-info-circle"></i> @logoutMessage
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            Context.Session.Remove("LogoutMessage"); // Clear after displaying
+        }
+
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
@@ -39,12 +122,21 @@
     <footer class="border-top footer text-muted">
         <div class="container">
             &copy; 2025 - EmployeeFrontendClient - <a asp-area="" asp-page="/Privacy">Privacy</a>
-        </div>
+    </footer>
     </footer>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <!-- Auto-hide alerts after 5 seconds -->
+    <script>
+        $(document).ready(function() {
+            setTimeout(function() {
+                $('.alert').fadeOut('slow');
+            }, 5000);
+        });
+    </script>
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>
