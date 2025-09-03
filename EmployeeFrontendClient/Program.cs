@@ -16,7 +16,7 @@ builder.Services.AddSession(options =>
 // Register AuthService with your API
 builder.Services.AddHttpClient<AuthService>(client =>
 {
-    client.BaseAddress = new Uri("https://localhost:7090/api/"); // Your API base URL
+    client.BaseAddress = new Uri("https://localhost:7090/"); // Your API base URL
 }).ConfigurePrimaryHttpMessageHandler(() =>
 {
     return new HttpClientHandler
